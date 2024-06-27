@@ -1,11 +1,11 @@
 using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
 public class Timer : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI _counter;
+    [Min(0)][SerializeField] private float _deleyCounter;
 
     private int _score;
 
@@ -14,10 +14,9 @@ public class Timer : MonoBehaviour
     private void Start()
     {
         _score = 0;
-        _isWaiting = false;
         _counter.text = _score.ToString();
 
-        StartCoroutine(StartClock());
+        StartCoroutine(StartClock(_deleyCounter));
     }
 
     private void Update()
@@ -31,18 +30,20 @@ public class Timer : MonoBehaviour
             else
             {
                 _isWaiting = false;
-                StartCoroutine(StartClock());
+                StartCoroutine(StartClock(_deleyCounter));
             }
         }
     }
 
-    private IEnumerator StartClock()
+    private IEnumerator StartClock(float deley)
     {
-        while(_isWaiting == false)
+        WaitForSeconds wait = new WaitForSeconds(deley);
+
+        while (_isWaiting == false)
         {
             _counter.text = _score.ToString();
             _score += 1;
-            yield return new WaitForSeconds(0.5f);
+            yield return wait;
         }   
     }
 }
